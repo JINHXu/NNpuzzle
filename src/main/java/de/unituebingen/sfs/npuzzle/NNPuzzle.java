@@ -48,11 +48,30 @@ public class NNPuzzle
         }
     }
 
-    //accessor: return instance variable
+
+    /*
+    accessor
+     */
 
     public int[] getTiles()
     {
         return tiles;
+    }
+    /*
+    mutator
+     */
+    public void setTiles(int[] newTiles)
+    {
+        if(newTiles.length != tiles.length)
+        {
+            System.out.println("error");
+            System.exit(0);
+        }
+
+        for(int i = 0; i < newTiles.length; i++)
+        {
+            tiles[i] = newTiles[i];
+        }
     }
 
     //given, do not change or delete
@@ -181,19 +200,83 @@ public class NNPuzzle
      * generate a random array by getting the successor state numberOfMoves times
      * @param numberOfMoves
      */
-    public void easyShuffle( int numberOfMoves ) {
-        for(int i = 0; i < numberOfMoves; i++)
+    public void easyShuffle( int numberOfMoves ) throws Exception
+    {
+        //ileegal para
+        if(numberOfMoves < 1)
         {
-            int size = this.successors().size();
-            return;
+            throw new Exception("ILLEGAL NUMBER OF MOVES");
+        }
+        //base case
+        else if(numberOfMoves == 1)
+        {
+            int numOfSucs = this.successors().size();
+            //generate random number between zero(inclusive) and size(exclusive)
+            int random = (int)(Math.random()*numOfSucs);
+            NNPuzzle randomSuc = this.successors().get(random);
+            this.setTiles(randomSuc.getTiles());
+        }
+        //recursive case
+        else
+        {
+            int numOfSucs = this.successors().size();
+            //generate random number between zero(inclusive) and size(exclusive)
+            int random = (int)(Math.random()*numOfSucs);
+            NNPuzzle randomSuc = this.successors().get(random);
+            this.setTiles(randomSuc.getTiles());
+            easyShuffle(numberOfMoves-1);
+
         }
     }
 
+    /**
+     * Knuth Shuffle the board, leaving the blank in its home position
+     */
     public void knuthShuffle() {
+        int N = tiles.length - 1;
+        for(int i = 0; i < N; i++)
+        {
+            Random rand = new Random();
+            int r = rand.nextInt(i + 1);
+            exch(tiles, i, r);
+        }
     }
 
+    /**
+     * helper method exch for knuthShuffle
+     * @param int[] tiles, int i, int j
+     */
+    public void exch(int[] t, int a, int b)
+    {
+        int tmp = t[a];
+        t[a] = t[b];
+        t[b] = tmp;
+    }
+
+    /**
+     * return true if the NNPuzzle is solvable(a puzzle is solvable iff it has even number of inversions)
+     * @return true if solvable, false otherwise
+     */
     public boolean isSolvable() {
-	return false;
+        int inversionCounter = 0;
+        int N = tiles.length;
+        for(int i = 0; i < N; i++)
+        {
+            if(tiles[i] == 0)
+            {
+                continue;
+            }
+
+            for(int j = i+1; j < N; j++)
+            {
+                if((tiles[j] < tiles[i])&&(tiles[j] != 0))
+                    inversionCounter++;
+            }
+        }
+        if((inversionCounter % 2) == 0)
+            return true;
+        else
+            return false;
     }
 
     public boolean isSolved() {
@@ -248,29 +331,95 @@ public class NNPuzzle
         }
     }
 
-    
+
     public static void main( String[] args ) throws Exception
     {
         System.out.println( "Hello N*N-Puzzle World!" );
 
         System.out.println();
 
+        try {
+
         /*
         test for method successors
          */
-            int[] testBoard = {1,2,4,6,0,8,7,5,6};
+            int[] testBoard = {1, 2, 4, 6, 0, 8, 7, 5, 6};
             NNPuzzle test = new NNPuzzle(testBoard);
             test.printer();
             System.out.println();
             List<NNPuzzle> l = test.successors();
-            for(int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 l.get(i).printer();
                 System.out.println();
             }
 
+            /*
+            test for mutator
+             */
 
+            int[] tobeSet = {1, 2, 3, 4, 5, 6, 7, 8, 0};
+            test.setTiles(tobeSet);
+            test.printer();
+            System.out.println();
 
+            /*
+            test easyShuffle
+             */
+            test.easyShuffle(340);
+            test.printer();
+            System.out.println();
+            /*
+            second test easyShuffle
+             */
+            NNPuzzle test2 = new NNPuzzle(4);
+            test2.easyShuffle(416);
+            test2.printer();
+            System.out.println();
+
+            /*
+            third test easyShuffle
+             */
+            NNPuzzle test3 = new NNPuzzle(6);
+            test3.easyShuffle(999);
+            test3.printer();
+            System.out.println();
+
+            /*
+            test for knuth shuffle
+             */
+            NNPuzzle testk1 = new NNPuzzle(3);
+            testk1.knuthShuffle();
+            testk1.printer();
+            System.out.println();
+
+            /*
+            second test for knuth shuffle
+             */
+            NNPuzzle testk2 = new NNPuzzle(5);
+            testk2.knuthShuffle();
+            testk2.printer();
+            System.out.println();
+
+            /*
+            third test for knuth shuffle
+             */
+            NNPuzzle testk3 = new NNPuzzle(6);
+            testk3.knuthShuffle();
+            testk3.printer();
+            System.out.println();
+
+            /*
+            test for method isSolvable
+             */
+            NNPuzzle testi = new NNPuzzle(4);
+            System.out.println(testi.isSolvable());
+        }
+
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.exit(0);
+        }
 
         }
 
