@@ -97,7 +97,7 @@ public class NNPuzzle
         //type casting
         NNPuzzle o = (NNPuzzle)obj;
         //check the length first
-        if(o.getTiles().length == this.tiles.length)
+        if(o.getTiles().length == tiles.length)
         {
             int N = tiles.length;
             for(int i = 0; i < N; i++)
@@ -320,12 +320,45 @@ public class NNPuzzle
         return;
     }
 
+    /**
+     * counts the number of misplaced tiles.
+     * @return the number of misplaced tiles.
+     */
     public int hamming() {
-	return 0;
+        int count = 0;
+        for(int i = 0; i < (tiles.length - 1); i++)
+        {
+            if(tiles[i] != (i + 1))
+            {
+                count++;
+            }
+        }
+        if(tiles[tiles.length-1] != 0 )
+            count++;
+        return count;
     }
 
+    /**
+     * counts for each tile its distance from its home location.
+     * @return the sum of each tile its distance from its home position
+     */
     public int manhattan() {
-	return 0;
+        int count = 0;
+        int N = (int)Math.sqrt((double)tiles.length);
+        for (int i = 0; i < tiles.length; i++)
+        {
+            if(tiles[i] != 0) {
+                int x = (tiles[i] - 1) % N - (i % N);
+                int y = (tiles[i] - 1) / N - (i / N);
+                count = count + Math.abs(x) + Math.abs(y);
+            }
+            else {
+                int x = Math.abs((i % N) - (N - 1));
+                int y = Math.abs((i / N) - (N - 1));
+                count = count + x + y;
+            }
+        }
+        return count;
     }
 
     /**
@@ -339,6 +372,7 @@ public class NNPuzzle
         //innitialize open list
         openList.push(startState);
 
+
         while(true)
         {
             //take the first element from open list
@@ -347,7 +381,8 @@ public class NNPuzzle
             if(s.isSolved())
             {
                 System.out.println("the given board is solved");
-                return;
+                startState.setTiles(s.getTiles());
+                break;
             }
             //add the state to the closed list of seen states
             closedList.push(s);
@@ -357,28 +392,14 @@ public class NNPuzzle
             {
                 NNPuzzle sta = l.get(i);
                 //check if sta is not in open list nor closed list with depth-first search
-                if(sta.notInStack(openList)&&sta.notInStack(closedList))
+                if((openList.search(sta) == -1)&&(closedList.search(sta) == -1))
                 {
                     openList.add(sta);
                 }
             }
 
         }
-    }
-
-    /**
-     * helper method for blind search
-     * @return true if state is not in parameter s
-     * @param s stack of states
-     */
-    public boolean notInStack(Stack<NNPuzzle> s)
-    {
-        while(!s.isEmpty())
-        {
-            if(equals(s.pop()))
-                return false;
-        }
-        return true;
+        return;
     }
     
     public static void heuristicSearch( NNPuzzle startState ){
@@ -426,6 +447,8 @@ public class NNPuzzle
                 System.out.println();
 
         }
+
+        System.out.println();
     }
 
 
@@ -565,6 +588,19 @@ public class NNPuzzle
             System.out.println(t2.isSolved());
             System.out.println(t3.isSolved());
 
+            System.out.println();
+
+
+            /*
+            test method equal
+             */
+
+            NNPuzzle e0 = new NNPuzzle(3);
+            System.out.println(e0.equals(t0));
+
+            NNPuzzle e0i = new NNPuzzle(3);
+            System.out.println(e0.equals(e0i));
+
 
             /*
             test blind search
@@ -572,14 +608,42 @@ public class NNPuzzle
 
             System.out.println("BLIND SEARCH SATRTS, 1: 09AM");
 
-            NNPuzzle bs = new NNPuzzle(3);
+            /*
+            NNPuzzle bs = new NNPuzzle(4);
             bs.createStartState();
             bs.printer();
             NNPuzzle.blindSearch(bs);
             System.out.println("mark");
             bs.printer();
+            System.out.println();
+            */
 
+
+            /*
+            test for method for hamming and manhattan
+             */
+            NNPuzzle hnm3 = new NNPuzzle(3);
+            NNPuzzle hnm4 = new NNPuzzle(4);
+            NNPuzzle hnm5 = new NNPuzzle(5);
+            NNPuzzle hnm6 = new NNPuzzle(6);
+
+            hnm3.createStartState();
+            hnm4.createStartState();
+            hnm5.createStartState();
+            hnm6.createStartState();
+
+            hnm3.printer();
+            hnm4.printer();
+            hnm5.printer();
+            hnm6.printer();
+
+            System.out.println(hnm3.hamming()+ " " +hnm3.manhattan());
+            System.out.println(hnm4.hamming()+ " " +hnm4.manhattan());
+            System.out.println(hnm5.hamming()+ " " +hnm5.manhattan());
+            System.out.println(hnm6.hamming()+ " " +hnm6.manhattan());
         }
+
+
 
         catch(Exception e)
         {
