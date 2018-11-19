@@ -244,7 +244,7 @@ public class NNPuzzle
 
     /**
      * helper method exch for knuthShuffle
-     * @param int[] tiles, int i, int j
+     * @param t, int i, int j
      */
     public void exch(int[] t, int a, int b)
     {
@@ -258,6 +258,19 @@ public class NNPuzzle
      * @return true if solvable, false otherwise
      */
     public boolean isSolvable() {
+
+        if((inversionCounter() % 2) == 0)
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * count the number of inversions
+     * @return number of inversions
+     */
+    public int inversionCounter()
+    {
         int inversionCounter = 0;
         int N = tiles.length;
         for(int i = 0; i < N; i++)
@@ -273,17 +286,38 @@ public class NNPuzzle
                     inversionCounter++;
             }
         }
-        if((inversionCounter % 2) == 0)
-            return true;
-        else
-            return false;
+        return inversionCounter;
     }
 
+    /**
+     * checks whether a given puzzle is in a solved state.
+     * @return true if the NNPuzzle is solved, false otherwise
+     */
     public boolean isSolved() {
-	return false;
+        for(int i = 0; i < (tiles.length-1); i++)
+        {
+            if(tiles[i] != (i+1))
+            {
+                return false;
+            }
+        }
+        if(tiles[tiles.length - 1] != 0)
+        {
+            return false;
+        }
+	    return true;
     }
 
+    /**
+     * initialize the problem state with a solvable Knuth randomization
+     */
     public void createStartState() {
+        knuthShuffle();
+        while(!isSolvable())
+        {
+            knuthShuffle();
+        }
+        return;
     }
 
     public int hamming() {
@@ -294,18 +328,81 @@ public class NNPuzzle
 	return 0;
     }
 
+    /**
+     * a method that solves the N puzzle for a given N
+     * @param startState the start state that resulted from a good shuffle
+     */
     public static void blindSearch( NNPuzzle startState){
+        //create open list and closed
+        Stack<NNPuzzle> openList = new Stack<NNPuzzle>();
+        Stack<NNPuzzle> closedList = new Stack<NNPuzzle>();
+        //innitialize open list
+        openList.push(startState);
+
+        while(true)
+        {
+            //take the first element from open list
+            NNPuzzle s = openList.pop();
+            //if the state is goal state, terminate
+            if(s.isSolved())
+            {
+                System.out.println("the given board is solved");
+                return;
+            }
+            //add the state to the closed list of seen states
+            closedList.push(s);
+            //call successors to get the successor states for the examined state
+            List<NNPuzzle> l = s.successors();
+            for(int i = 0; i < l.size(); i++)
+            {
+                NNPuzzle sta = l.get(i);
+                //check if sta is not in open list nor closed list with depth-first search
+                if(sta.notInStack(openList)&&sta.notInStack(closedList))
+                {
+                    openList.add(sta);
+                }
+            }
+
+        }
+    }
+
+    /**
+     * helper method for blind search
+     * @return true if state is not in parameter s
+     * @param s stack of states
+     */
+    public boolean notInStack(Stack<NNPuzzle> s)
+    {
+        while(!s.isEmpty())
+        {
+            if(equals(s.pop()))
+                return false;
+        }
+        return true;
     }
     
     public static void heuristicSearch( NNPuzzle startState ){
     }
-    
+
+    /**
+     * prints all states
+     */
     private void printState(){
+        int NN = tiles.length;
+        int N = (int)Math.sqrt(NN);
+
+        for(int i = 0; i < NN; i++)
+        {
+            System.out.print(tiles[i] + " ");
+            if((i % N) == (N - 1))
+                System.out.println();
+
+        }
     }
 
     /**
      * clone method to make a copy of a given board
-     * @param NNPuzzle to be cloned
+     * @param board to be cloned
      * @return duplicated NNPuzzle
      */
     public NNPuzzle clone(NNPuzzle board)
@@ -315,7 +412,7 @@ public class NNPuzzle
     }
 
     /**
-     * print the board
+     * print the board, which is printState
      */
     public void printer()
     {
@@ -409,10 +506,79 @@ public class NNPuzzle
             System.out.println();
 
             /*
-            test for method isSolvable
+            test for method inversionCounter(isSolvable)
              */
             NNPuzzle testi = new NNPuzzle(4);
             System.out.println(testi.isSolvable());
+            System.out.println(testi.inversionCounter());
+
+            /*
+            second test for method inversionCounter
+             */
+            int[] array4i = {3,2,1,8,4,5,6,7,0};
+            NNPuzzle testi2 = new NNPuzzle(array4i);
+            System.out.println(testi2.inversionCounter());
+            System.out.println(testi2.isSolvable());
+
+            /*
+            third test for method inversionCounter
+             */
+            int[] array4i2 = {9,2,11,12,15,3,6,8,7,13,0,1,4,5,10,14};
+            NNPuzzle testi3 = new NNPuzzle(array4i2);
+            System.out.println(testi3.inversionCounter());
+            System.out.println(testi3.isSolvable());
+            System.out.println();
+
+            /*
+            test for method createStartState
+             */
+
+            NNPuzzle t0 = new NNPuzzle(3);
+            NNPuzzle t1 = new NNPuzzle(4);
+            NNPuzzle t2 = new NNPuzzle(5);
+            NNPuzzle t3 = new NNPuzzle(6);
+
+
+            t0.createStartState();
+            t1.createStartState();
+            t2.createStartState();
+            t3.createStartState();
+
+
+            t0.printer();
+            t1.printer();
+            t2.printer();
+            t3.printer();
+
+            System.out.println(t0.isSolvable());
+            System.out.println(t1.isSolvable());
+            System.out.println(t2.isSolvable());
+            System.out.println(t3.isSolvable());
+
+            System.out.println();
+
+            /*
+            test method isSolved
+             */
+            System.out.println(t0.isSolved());
+            System.out.println(t1.isSolved());
+            System.out.println(t2.isSolved());
+            System.out.println(t3.isSolved());
+
+
+            /*
+            test blind search
+             */
+
+            System.out.println("BLIND SEARCH SATRTS, 1: 09AM");
+
+            NNPuzzle bs = new NNPuzzle(3);
+            bs.createStartState();
+            bs.printer();
+            NNPuzzle.blindSearch(bs);
+            System.out.println("mark");
+            bs.printer();
+
         }
 
         catch(Exception e)
