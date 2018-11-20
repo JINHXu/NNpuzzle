@@ -5,13 +5,7 @@ package de.unituebingen.sfs.npuzzle;
 
 // some Java libraries to consider
 import java.sql.SQLSyntaxErrorException;
-import java.util.Random;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Stack;
-import java.util.Iterator;
-import java.util.Comparator;
+import java.util.*;
 
 /**
  * Hello NN Puzzle world!
@@ -21,39 +15,14 @@ public class NNPuzzle implements Comparator<NNPuzzle>
 {
     private int[] tiles;
     private int goalDistanceh;
-    private int getGoalDistancem;
-
-
-    public int getGoalDistanceh()
-    {
-        return hamming();
-    }
-
-
-    public int getGetGoalDistancem()
-    {
-        return manhattan();
-    }
+    private int goalDistancem;
+    
 
     /**
-     * compareTo method compares the manhattan distance of two boards
-     * @param board1 board2
-     * @return  1 if manhattan distance of this is bigger than board
-     *         -1 if smaller
-     *          0 if equals
+     * constructor
+     * @param N
+     * @throws Exception
      */
-    public int compare(NNPuzzle board1, NNPuzzle board2)
-    {
-        if(board1.getGoalDistancem() > board2.getGoalDistancem())
-            return 1;
-        else if(board1.getGoalDistancem() < board2.getGoalDistancem())
-            return -1;
-        else
-            return 0;
-    }
-
-    
-    // constructor taking N
 
     public NNPuzzle(int N) throws Exception{
         //throw Exception if N is not accepted
@@ -70,10 +39,15 @@ public class NNPuzzle implements Comparator<NNPuzzle>
             tiles[i-1] = i;
         }
 
+        goalDistanceh = hamming();
+        goalDistancem = manhattan();
+
     }
 
-    // constructor, using array of ints
-    //pretty usure
+    /**
+     * constructor
+     * @param newTiles
+     */
     public NNPuzzle( int[] newTiles ) {
         int N = newTiles.length;
         tiles = new int[N];
@@ -81,16 +55,31 @@ public class NNPuzzle implements Comparator<NNPuzzle>
         {
             tiles[i] = newTiles[i];
         }
+
+        goalDistanceh = hamming();
+        goalDistancem = manhattan();
     }
 
 
     /*
-    accessor
+    accessors
      */
 
     public int[] getTiles()
     {
         return tiles;
+    }
+
+
+    public int getGoalDistanceh()
+    {
+        return hamming();
+    }
+
+
+    public int getGetGoalDistancem()
+    {
+        return manhattan();
     }
     /*
     mutator
@@ -146,11 +135,27 @@ public class NNPuzzle implements Comparator<NNPuzzle>
     }
 
 
-    // given, do not change or delete.
-    @Override
     public int hashCode() {
-        return super.hashCode();
+        return Arrays.hashCode(tiles);
     }
+
+    /**
+     * compareTo method compares the manhattan distance of two boards
+     * @param board1 board2
+     * @return  1 if manhattan distance of this is bigger than board
+     *         -1 if smaller
+     *          0 if equals
+     */
+    public int compare(NNPuzzle board1, NNPuzzle board2)
+    {
+        if(board1.getGoalDistancem() > board2.getGoalDistancem())
+            return 1;
+        else if(board1.getGoalDistancem() < board2.getGoalDistancem())
+            return -1;
+        else
+            return 0;
+    }
+
 
     /**
      * Return all possible direct successor states
@@ -440,6 +445,37 @@ public class NNPuzzle implements Comparator<NNPuzzle>
     public static void heuristicSearch( NNPuzzle startState ){
         //create open list and closed list
         PriorityQueue<NNPuzzle> openList = new PriorityQueue<NNPuzzle>();
+        PriorityQueue<NNPuzzle> closedList = new PriorityQueue<NNPuzzle>();
+        //initialize the openlist
+        openList.add(startState);
+
+        while(true)
+        {
+            //take the first element from the open list
+            NNPuzzle s = openList.poll();
+
+            if(s.isSolved())
+            {
+                System.out.println("the given board is solved");
+                startState.setTiles(s.getTiles());
+                break;
+            }
+            closedList.add(s);
+
+            List<NNPuzzle> l = s.successors();
+
+            for(int i = 0; i < l.size(); i++)
+            {
+                NNPuzzle sta = l.get(i);
+                //check if sta is not in open list nor closed list with depth-first search
+                if((!openList.contains(sta))&&(!closedList.contains(sta)))
+                {
+                    openList.add(sta);
+                }
+            }
+
+        }
+        return;
     }
 
     /**
