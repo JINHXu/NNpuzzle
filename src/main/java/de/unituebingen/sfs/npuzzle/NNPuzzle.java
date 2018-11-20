@@ -779,6 +779,13 @@ public class NNPuzzle implements Comparable
                 System.out.println("time consuming by informed search(hamming) for " + i + "*" + i + " puzzle is " + time + "\n" + "\n" );
             }
 
+            /*
+            informed search(manhattan) requires replacing all invocations of hamming()
+            with manhattan() in method compareTo at the end of NNPuzzle class
+            the same codes in main as informed search(hamming)
+             */
+            
+
         }
 
 
