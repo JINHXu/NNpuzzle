@@ -1,3 +1,6 @@
+/**
+ * Jinghua Xu
+ */
 package de.unituebingen.sfs.npuzzle;
 
 // some Java libraries to consider
@@ -14,15 +17,41 @@ import java.util.Comparator;
  * Hello NN Puzzle world!
  *
  */
-public class NNPuzzle 
+public class NNPuzzle implements Comparator<NNPuzzle>
 {
     private int[] tiles;
-    private int goalDistance;
+    private int goalDistanceh;
+    private int getGoalDistancem;
 
-    public int getGoalDistance()
+
+    public int getGoalDistanceh()
     {
         return hamming();
     }
+
+
+    public int getGetGoalDistancem()
+    {
+        return manhattan();
+    }
+
+    /**
+     * compareTo method compares the manhattan distance of two boards
+     * @param board1 board2
+     * @return  1 if manhattan distance of this is bigger than board
+     *         -1 if smaller
+     *          0 if equals
+     */
+    public int compare(NNPuzzle board1, NNPuzzle board2)
+    {
+        if(board1.getGoalDistancem() > board2.getGoalDistancem())
+            return 1;
+        else if(board1.getGoalDistancem() < board2.getGoalDistancem())
+            return -1;
+        else
+            return 0;
+    }
+
     
     // constructor taking N
 
@@ -80,6 +109,7 @@ public class NNPuzzle
         }
     }
 
+
     @Override
     /**
      * will be amended later, new instance variable to be added
@@ -121,11 +151,6 @@ public class NNPuzzle
     public int hashCode() {
         return super.hashCode();
     }
-
-    /**
-     * compare fuction, compares 2 given boards
-     * return
-     */
 
     /**
      * Return all possible direct successor states
@@ -413,6 +438,8 @@ public class NNPuzzle
     }
     
     public static void heuristicSearch( NNPuzzle startState ){
+        //create open list and closed list
+        PriorityQueue<NNPuzzle> openList = new PriorityQueue<NNPuzzle>();
     }
 
     /**
