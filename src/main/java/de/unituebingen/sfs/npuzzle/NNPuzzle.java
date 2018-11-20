@@ -1,5 +1,10 @@
 /**
- * Jinghua Xu
+ * Course:      Data Structures and Algorithms for CL III - WS1819
+ * Assignment:  Assignment 4
+ * Author:      Jinghua Xu
+ * Description: NNPuzzle
+ *
+ * Honor Code:  I pledge that this program represents my own work.
  */
 package de.unituebingen.sfs.npuzzle;
 
@@ -69,16 +74,6 @@ public class NNPuzzle implements Comparable
     }
 
 
-    public int getGoalDistanceh()
-    {
-        return hamming();
-    }
-
-
-    public int getGetGoalDistancem()
-    {
-        return manhattan();
-    }
     /*
     mutator
      */
@@ -410,6 +405,8 @@ public class NNPuzzle implements Comparable
         //innitialize open list
         openList.push(startState);
 
+        int count = 0;
+
 
         while(true)
         {
@@ -418,10 +415,11 @@ public class NNPuzzle implements Comparable
             //if the state is goal state, terminate
             if(s.isSolved())
             {
-                System.out.println("the given board is solved");
+                System.out.println("the given board is solved\n");
                 startState.setTiles(s.getTiles());
                 break;
             }
+            count++;
             //add the state to the closed list of seen states
             closedList.push(s);
             //call successors to get the successor states for the examined state
@@ -437,6 +435,7 @@ public class NNPuzzle implements Comparable
             }
 
         }
+        System.out.println("number of examined states: " + count);
         return;
     }
     
@@ -447,6 +446,8 @@ public class NNPuzzle implements Comparable
         //initialize the openlist
         openList.add(startState);
 
+        int count = 0;
+
         while(true)
         {
             //take the first element from the open list
@@ -455,10 +456,11 @@ public class NNPuzzle implements Comparable
 
             if(s.isSolved())
             {
-                System.out.println("the given board is solved");
+                System.out.println("the given board is solved\n");
                 startState.setTiles(s.getTiles());
                 break;
             }
+            count++;
             //when you add a state to the priority queue, compute its goal distance value first.
             closedList.add(s);
 
@@ -476,6 +478,7 @@ public class NNPuzzle implements Comparable
             }
 
         }
+        System.out.println("number of examined states: " + count);
         return;
     }
 
@@ -526,6 +529,11 @@ public class NNPuzzle implements Comparable
     }
 
 
+    /**
+     * Analysis starts around line 740
+     * @param args
+     * @throws Exception
+     */
     public static void main( String[] args ) throws Exception
     {
         System.out.println( "Hello N*N-Puzzle World!" );
@@ -723,13 +731,53 @@ public class NNPuzzle implements Comparable
              */
 
             System.out.println("test for heuristics search");
-            NNPuzzle hs3 = new NNPuzzle(5);
+            NNPuzzle hs3 = new NNPuzzle(3);
             hs3.createStartState();
             hs3.printer();
             NNPuzzle.heuristicSearch(hs3);
             System.out.println("solution by heuristics search");
             hs3.printer();
 
+
+
+
+
+
+
+            /*
+            Analysis for 4.7 starts here
+             */
+
+            System.out.println("Analysis starts here:");
+            System.out.println();
+
+            System.out.println("Blind Search:" + "\n");
+
+            for(int i = 3; i < 7; i++)
+            {
+                NNPuzzle anlysis_bl = new NNPuzzle(i);
+                anlysis_bl.createStartState();
+                anlysis_bl.printer();
+                StopWatch stopWatch = new StopWatch();
+                NNPuzzle.blindSearch(anlysis_bl);
+                Double time = stopWatch.elapsedTime();
+                anlysis_bl.printer();
+                System.out.println("time consuming by blind search for " + i + "*" + i + " puzzle is " + time + "\n" + "\n" );
+            }
+
+            System.out.println("informed search(hamming): \n");
+
+            for(int i = 3; i < 7; i++)
+            {
+                NNPuzzle anlysis_hhl = new NNPuzzle(i);
+                anlysis_hhl.createStartState();
+                anlysis_hhl.printer();
+                StopWatch stopWatch = new StopWatch();
+                NNPuzzle.heuristicSearch(anlysis_hhl);
+                Double time = stopWatch.elapsedTime();
+                anlysis_hhl.printer();
+                System.out.println("time consuming by informed search(hamming) for " + i + "*" + i + " puzzle is " + time + "\n" + "\n" );
+            }
 
         }
 
