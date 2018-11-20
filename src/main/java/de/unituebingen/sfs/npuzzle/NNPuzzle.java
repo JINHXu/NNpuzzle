@@ -14,9 +14,8 @@ import java.util.*;
 public class NNPuzzle implements Comparator<NNPuzzle>
 {
     private int[] tiles;
-    private int goalDistanceh;
-    private int goalDistancem;
-    
+    private int goalDistance;
+
 
     /**
      * constructor
@@ -39,8 +38,7 @@ public class NNPuzzle implements Comparator<NNPuzzle>
             tiles[i-1] = i;
         }
 
-        goalDistanceh = hamming();
-        goalDistancem = manhattan();
+        goalDistance = hamming();
 
     }
 
@@ -56,8 +54,8 @@ public class NNPuzzle implements Comparator<NNPuzzle>
             tiles[i] = newTiles[i];
         }
 
-        goalDistanceh = hamming();
-        goalDistancem = manhattan();
+        goalDistance = hamming();
+
     }
 
 
@@ -148,9 +146,9 @@ public class NNPuzzle implements Comparator<NNPuzzle>
      */
     public int compare(NNPuzzle board1, NNPuzzle board2)
     {
-        if(board1.getGoalDistancem() > board2.getGoalDistancem())
+        if(board1.hamming() > board2.hamming())
             return 1;
-        else if(board1.getGoalDistancem() < board2.getGoalDistancem())
+        else if(board1.hamming() < board2.hamming())
             return -1;
         else
             return 0;
@@ -452,6 +450,7 @@ public class NNPuzzle implements Comparator<NNPuzzle>
         while(true)
         {
             //take the first element from the open list
+            //when you add a state to the priority queue, compute its goal distance value first.
             NNPuzzle s = openList.poll();
 
             if(s.isSolved())
@@ -460,6 +459,7 @@ public class NNPuzzle implements Comparator<NNPuzzle>
                 startState.setTiles(s.getTiles());
                 break;
             }
+            //when you add a state to the priority queue, compute its goal distance value first.
             closedList.add(s);
 
             List<NNPuzzle> l = s.successors();
@@ -467,7 +467,8 @@ public class NNPuzzle implements Comparator<NNPuzzle>
             for(int i = 0; i < l.size(); i++)
             {
                 NNPuzzle sta = l.get(i);
-                //check if sta is not in open list nor closed list with depth-first search
+                //check if sta is not in open list nor closed list
+                //when you add a state to the priority queue, compute its goal distance value first.
                 if((!openList.contains(sta))&&(!closedList.contains(sta)))
                 {
                     openList.add(sta);
