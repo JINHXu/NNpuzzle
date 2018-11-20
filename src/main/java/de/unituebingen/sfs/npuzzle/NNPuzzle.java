@@ -11,7 +11,7 @@ import java.util.*;
  * Hello NN Puzzle world!
  *
  */
-public class NNPuzzle implements Comparator<NNPuzzle>
+public class NNPuzzle implements Comparable
 {
     private int[] tiles;
     private int goalDistance;
@@ -715,6 +715,22 @@ public class NNPuzzle implements Comparator<NNPuzzle>
             System.out.println(hnm4.hamming()+ " " +hnm4.manhattan());
             System.out.println(hnm5.hamming()+ " " +hnm5.manhattan());
             System.out.println(hnm6.hamming()+ " " +hnm6.manhattan());
+
+
+
+            /*
+            test for heuristics search
+             */
+
+            System.out.println("test for heuristics search");
+            NNPuzzle hs3 = new NNPuzzle(5);
+            hs3.createStartState();
+            hs3.printer();
+            NNPuzzle.heuristicSearch(hs3);
+            System.out.println("solution by heuristics search");
+            hs3.printer();
+
+
         }
 
 
@@ -728,4 +744,14 @@ public class NNPuzzle implements Comparator<NNPuzzle>
         }
 
 
+    @Override
+    public int compareTo(Object o) {
+        NNPuzzle board = (NNPuzzle)o;
+        if(this.hamming() > board.hamming())
+            return 1;
+        else if(this.hamming() < board.hamming())
+            return -1;
+        else
+            return 0;
+    }
 }
