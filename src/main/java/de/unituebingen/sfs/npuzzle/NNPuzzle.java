@@ -486,16 +486,7 @@ public class NNPuzzle implements Comparable
      * prints all states
      */
     private void printState(){
-        int NN = tiles.length;
-        int N = (int)Math.sqrt(NN);
-
-        for(int i = 0; i < NN; i++)
-        {
-            System.out.print(tiles[i] + " ");
-            if((i % N) == (N - 1))
-                System.out.println();
-
-        }
+    return;
     }
 
     /**
@@ -741,29 +732,12 @@ public class NNPuzzle implements Comparable
 
 
 
-
-
-
             /*
             Analysis for 4.7 starts here
              */
 
             System.out.println("Analysis starts here:");
-            System.out.println();
 
-            System.out.println("Blind Search:" + "\n");
-
-            for(int i = 3; i < 7; i++)
-            {
-                NNPuzzle anlysis_bl = new NNPuzzle(i);
-                anlysis_bl.createStartState();
-                anlysis_bl.printer();
-                StopWatch stopWatch = new StopWatch();
-                NNPuzzle.blindSearch(anlysis_bl);
-                Double time = stopWatch.elapsedTime();
-                anlysis_bl.printer();
-                System.out.println("time consuming by blind search for " + i + "*" + i + " puzzle is " + time + "\n" + "\n" );
-            }
 
             System.out.println("informed search(hamming): \n");
 
@@ -779,12 +753,28 @@ public class NNPuzzle implements Comparable
                 System.out.println("time consuming by informed search(hamming) for " + i + "*" + i + " puzzle is " + time + "\n" + "\n" );
             }
 
+
             /*
             informed search(manhattan) requires replacing all invocations of hamming()
             with manhattan() in method compareTo at the end of NNPuzzle class
             the same codes in main as informed search(hamming)
              */
+
+            System.out.println("Blind Search:" + "\n");
+
+            for(int i = 3; i < 7; i++)
+            {
+                NNPuzzle anlysis_bl = new NNPuzzle(i);
+                anlysis_bl.createStartState();
+                anlysis_bl.printer();
+                StopWatch stopWatch = new StopWatch();
+                NNPuzzle.blindSearch(anlysis_bl);
+                Double time = stopWatch.elapsedTime();
+                anlysis_bl.printer();
+                System.out.println("time consuming by blind search for " + i + "*" + i + " puzzle is " + time + "\n" + "\n" );
+            }
             
+
 
         }
 
