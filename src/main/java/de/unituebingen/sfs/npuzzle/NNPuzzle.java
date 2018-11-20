@@ -17,6 +17,12 @@ import java.util.Comparator;
 public class NNPuzzle 
 {
     private int[] tiles;
+    private int goalDistance;
+
+    public int getGoalDistance()
+    {
+        return hamming();
+    }
     
     // constructor taking N
 
@@ -74,7 +80,6 @@ public class NNPuzzle
         }
     }
 
-    //given, do not change or delete
     @Override
     /**
      * will be amended later, new instance variable to be added
@@ -116,6 +121,11 @@ public class NNPuzzle
     public int hashCode() {
         return super.hashCode();
     }
+
+    /**
+     * compare fuction, compares 2 given boards
+     * return
+     */
 
     /**
      * Return all possible direct successor states
