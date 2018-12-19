@@ -773,7 +773,7 @@ public class NNPuzzle implements Comparable
                 anlysis_bl.printer();
                 System.out.println("time consuming by blind search for " + i + "*" + i + " puzzle is " + time + "\n" + "\n" );
             }
-            
+
 
 
         }
