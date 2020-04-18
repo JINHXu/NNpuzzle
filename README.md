@@ -1,4 +1,4 @@
-#NNPuzzle
+# NNPuzzle
 
 ![npuzzle](https://github.com/claus-zinn/dsa3-a4/blob/master/145px-15-puzzle_magical.svg.png "15-puzzle")
 
