@@ -1,23 +1,15 @@
-# Assignment 4 (*graded*):
-
-*This is a graded assignment. The assignment is due on Tuesday November 20, 2018 at 11pm local time. Later github commits will
- be disgarded.* Please respect the class' [policy](https://dsacl3-2018.github.io/policy.html). Happy coding!
-
+#NNPuzzle
 
 ![npuzzle](https://github.com/claus-zinn/dsa3-a4/blob/master/145px-15-puzzle_magical.svg.png "15-puzzle")
 
-## The assignment
 
 The N puzzle is a game invented and popularized by Noyes Palmer Chapman in the 1870s. It is played
-on an N-by-N grid with $N^2 - 1$ tiles labeled 1 through N-1 and a blank square. Your goal is to
-rearrange the tiles so that they are in order. You are permitted to slide one of the available
-tiles horizontally or vertically (but not diagonally) into the blank square. In this assignment,
-you will write a program that solves the puzzle automatically. Your program will be capable of
-solving the puzzle for N=3, but also for N=4, N=5, and N=6. For this, you will need to implement
+on an N-by-N grid with  `N^2 - 1`  tiles labeled 1 through N-1 and a blank square. The goal is to
+rearrange the tiles so that they are in order. Players are permitted to slide one of the available
+tiles horizontally or vertically (but not diagonally) into the blank square. This is a program that solves the puzzle automatically. It will be capable of
+solving the puzzle for N=3, but also for N=4, N=5, and N=6. It implements
 two search strategies: blind search and informed search.
 
-In the github repository, you'll find the puzzle skeleton code to get started. For the sake of
-simplicity, all the methods will be implemented in the NNPuzzle class.
 
 ## 4.1 State representation
 
@@ -101,23 +93,23 @@ public boolean isSolvable()
 ~~~
 
 ## 4.3d
-Now, write a method to initialize the problem state with a solvable Knuth randomization:
+A method to initialize the problem state with a solvable Knuth randomization:
 
 ~~~{.java}
 public void createStartState() 
 ~~~
 
-Your method should call the Knuth shuffle until a randomized board is found solvable.
+It should call the Knuth shuffle until a randomized board is found solvable.
 
 ## 4.3e
-Finally, write a method that checks whether a given puzzle is in a solved state.
+Finally, A method that checks whether a given puzzle is in a solved state.
 
 ~~~{.java}
 public boolean isSolved() 
 ~~~
 
 
-Recap: We have a representation of the N*N board, we can produce solvable random states, and we can
+We have a representation of the N*N board, we can produce solvable random states, and we can
 generate successor states for each given state. In the following, we will produce code that can
 solve the puzzle automatically. For this, we start with blind search.
 
@@ -132,7 +124,7 @@ to the closed list. A successor state for a given state will be added to the ope
 has not been seen before (that is, is hasn't been added to the closed list in the past, and it's
 not already in the open list).
 
-Write a method
+A method
 
 ~~~{.java}
 public static void blindSearch( NNPuzzle startState )
@@ -150,8 +142,7 @@ successor states for the examined state. For each state, if a successor state is
 list (and not in the OPEN list already), add the state to the OPEN list.
 
 4. Continue with 1.
-
-Hint: Use stacks for maintaining the open list. This will implement *depth-first search*.
+Use stacks for maintaining the open list. This will implement *depth-first search*.
 
 
 ## 4.5 Use of Heuristic Information
@@ -162,7 +153,7 @@ distance to the goal state.
 
 ## 4.5a Number of misplaced tiles
 
-Write the method
+The method
 ~~~{.java}
 public int hamming() 
 ~~~
@@ -172,8 +163,7 @@ that counts the number of misplaced tiles.
 E.g., the hamming distance for the given board above is 13. Only the blank, 2, and 14 are in their home position.
 
 ## 4.5b Manhattan distance
-
-Write the method
+The method
 ~~~{.java}
 public int manhattan() 
 ~~~
@@ -186,7 +176,7 @@ right, down, down, down).
 
 ## 4.6 Heuristic Search
 
-For informed search, you will now use a Priority Queue for maintaining the *open list*. For this,
+For informed search, now use a Priority Queue for maintaining the *open list*. For this,
 states must now be associated with their goal distance (either hamming or manhattan). The state
 with the minimal distance should be at the top of the Priority Queue. This implements *best-first search*.
 
